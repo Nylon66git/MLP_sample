@@ -57,7 +57,7 @@ class myNet():
     # 学習率の設定とパラメータの初期化
     #   - m: 中間層を構成するパーセプトロンの数
     def __init__(self, m):
-        self.alpha = 0.1 # 学習率
+        self.alpha = 0.5 # 学習率
         self.w = np.random.randn(m) # パラメータ w[0] ～ w[m-1] : m 個分の要素を持つ配列，正規乱数を用いてランダムに初期化
         self.a = np.random.randn(m) # パラメータ a[0] ～ a[m-1] : m 個分の要素を持つ配列，正規乱数を用いてランダムに初期化
         self.m = m # 整数，パーセプトロン数を記憶しておく
@@ -83,11 +83,11 @@ class myNet():
         self.da = np.zeros(self.m) # dL/da 用のメモリ確保，なお da は m 個分の要素を持つ配列
         self.dw = np.zeros(self.m) # dL/dw 用のメモリ確保，なお dw は m 個分の要素を持つ配列
         for j in range(self.m):
-            self.da[j] = (2 / self.m) * np.sum(self.e * dg(self.z) * self.h[:, j]) # dL/da[j] の計算
-            self.dw[j] = (2 * self.a[j] / self.m) * np.sum(self.e * dg(self.z) * dg(self.u[:, j]) * x) # dL/dw[j] の計算
+            self.da[j] = (2 / self.batch_size) * np.sum(self.e * dg(self.z) * self.h[:, j]) # dL/da[j] の計算
+            self.dw[j] = (2 * self.a[j] / self.batch_size) * np.sum(self.e * dg(self.z) * dg(self.u[:, j]) * x) # dL/dw[j] の計算
         self.a = self.a - self.alpha * self.da # a[j] <- a[j] - alpha * dL/da[j] としてパラメータ更新
         self.w = self.w - self.alpha * self.dw # w[j] <- w[j] - alpha * dL/dw[j] としてパラメータ更新
-        return np.mean(self.e ** 2) # 誤差の二乗平均，つまり (1/batch_size) * Σi(y[i] - y_hat[i])^2 を返す
+        return np.mean(self.e ** 2) # 誤差の二乗平均，つまり (1/batch_size)*Σi(y[i] - y_hat[i])^2 を返す
 
 
 # C言語のメイン関数に相当するもの（という認識でOK）
